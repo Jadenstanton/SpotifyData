@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Tracks</title>
+  <link rel="stylesheet" href="/public/nav.css">
+  <link rel="stylesheet" href="/public/style.css">
+  <script src="/app.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="https://kit.fontawesome.com/0c4f512734.js" crossorigin="anonymous"></script>
+  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css'>
+  <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
+  <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js'></script>
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+  <script src="/nav.js"></script>
+</head>
+
+<body style="background-color: rgb(24, 24, 24);" onload="onPageLoad()">
+    <div>
+        <nav class="navbar navbar-expand-sm navbar-mainbg">
+            <a class="navbar-brand navbar-logo" href="#">Top Tracks</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
+                <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
+                <li class="nav-item">
+                  <a class="nav-link" href="/public/index.html"><i class="fa-solid fa-user-lock"></i>Login</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/public/pages/profile.html"><i class="fa-regular fa-user"></i></i>Profile</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="topTracks.html"><i class="fa-solid fa-music"></i></i>Top Tracks</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/public/pages/topArtists.html"><i class="fa-solid fa-microphone"></i>Top Artists</a>
+                </li>
+              </ul>
+            </div>
+        </nav>  
+    </div>
+    
+  <!-- <div class="container">
+    <div id="tokenSection" class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="clientId" class="form-label">Client ID</label>
+          <input type="text" class="form-control" id="clientId" placeholder="">
+        </div>
+        <div class="mb-3">
+          <label for="clientSecret" class="form-label">Client Secret</label>
+          <input type="text" class="form-control" id="clientSecret" placeholder="">
+        </div>
+        <input class="btn btn-primary btn-lg" type="button" onclick="requestAuth()" value="Request Authorization"></br>
+      </div>
+    </div>
+  </div> -->
+  <div id="tracksSection" class="container">
+    <div class="col">
+      <div class="mb-3">
+        <label for="topTracks" class="form-label" style="color: #FFFFFF;">Top Tracks</label>
+        <select id="topTracks" class="form-control">
+        </select>
+        <input class="button" type="button" onclick="refreshTopTracks()" value="Refresh Tracks">
+      </div>
+    </div>
+  </div>
+  
+  <!-- </div>
+  <div id="tokenSection" class="row">
+    <div class="col">
+        <p class="welcomeText">This is a javascript app that shows how to use the Spotify API to control the playback 
+            of music (playlist or albums) on any of your devices connected to your spotify account.</p>
+        <p class="welcomeText">To use this app you need a Spotify client ID and client secret. You get these by 
+            creating an app in the Spotify developers dashboard here 
+            <a href="https://developer.spotify.com/dashboard/applications" target="_blank">https://developer.spotify.com/dashboard/applications</a> 
+             and add https://makeratplay.github.io/SpotifyWebAPI/ in the "Redirect URIs" settings field.
+        </p>                                      
+        
+    </div> -->
+
+  <!-- <div class="container">
+    <div class="mb-3">
+      <label for="devices" class="form-label">Devices</label>
+      <select id="devices" class="form-control">
+      </select>
+      <input class="btn btn-primary btn-sm mt-3" type="button" onclick="refreshDevices()" value="Refresh Devices">
+      <input type="button" class="btn btn-dark btn-sm  mt-3" onclick="transfer()" value="Transfer">
+    </div>
+  </div>
+   -->
+
+  
+</body>
+</html>

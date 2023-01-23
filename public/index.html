@@ -1,165 +1,68 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> <script src="/app.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <style type="text/css">
-      #login, #loggedin {
-        display: none;
-      }
-      .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
-      }
-    </style>
-  </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="nav.css">
+  <link rel="stylesheet" href="style.css">
 
-  <body>
-    <div class="container">
-      <div id="login">
-        <h1>This is an example of the Authorization Code flow</h1>
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+  <title>Document</title>
+</head>
+<script src="https://kit.fontawesome.com/0c4f512734.js" crossorigin="anonymous"></script>
+<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css'>
+<script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js'></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="/nav.js"></script>
+<script src="/app.js"></script>
+
+<body style="background-color: rgb(24, 24, 24);">
+
+<nav class="navbar navbar-expand-sm navbar-mainbg">
+	<a class="navbar-brand navbar-logo" href="#">Home</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<i class="fas fa-bars text-white"></i>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav ml-auto">
+			<div class="hori-selector"><div class="left"></div><div class="right"></div></div>
+      <li class="nav-item active">
+				<a class="nav-link" href="index.html"><i class="fa-solid fa-user-lock"></i>Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/public/pages/profile.html"><i class="fa-regular fa-user"></i></i>Profile</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/public/pages/topTracks.html"><i class="fa-solid fa-music"></i></i>Top Tracks</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/public/pages/topArtists.html"><i class="fa-solid fa-microphone"></i>Top Artists</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+<div class="container">
+  <div id="tokenSection" class="row">
+    <div class="col">
+      <!-- <div class="mb-3">
+        <label for="clientId" class="form-label">Client ID</label>
+        <input type="text" class="form-control" id="clientId" placeholder="">
       </div>
-      <div id="loggedin">
-        <div id="user-profile">
-        </div>
-        <div id="oauth">
-        </div>
-        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
-      </div>
-    </div>
-      <div class="container">
-          <div>
-        <h1>Your Top Songs</h1>
-      </div>
-      <div>
-        <center>
-          <input type="text" id="password" placeholder="Enter your password" />  
-        </center>
-      </div>
-      <!-- <div>
-        <center>
-          <button class="glow-on-hover" type="button" onclick="hashFunc()" id="btn1">Hash Password</button>
-          <button class="glow-on-hover" type="button" onclick="hashSalt()" id="btn2">Hash with Salt</button>
-        </center>
+      <div class="mb-3">
+        <label for="clientSecret" class="form-label">Client Secret</label>
+        <input type="text" class="form-control" id="clientSecret" placeholder="">
       </div> -->
-      <center>
-        <div class="box">
-          <p id="topSongs" style="color: var(--dark);">topSongs</p>
-        </div>
-      </center>
+      <div class="center">
+        <h1 class="title">Log into Spotify</h1>
       </div>
-    </body>
-
-    <script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>Logged in as {{display_name}}</h1>
-      <div class="media">
-        <div class="pull-left">
-          <img class="media-object" width="150" src="{{images.0.url}}" />
-        </div>
-        <div class="media-body">
-          <dl class="dl-horizontal">
-            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
-            <dt>Id</dt><dd>{{id}}</dd>
-            <dt>Email</dt><dd>{{email}}</dd>
-            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
-            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
-            <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
-            <dt>Country</dt><dd>{{country}}</dd>
-          </dl>
-        </div>
-      </div>
-    </script>
-
-    <script id="oauth-template" type="text/x-handlebars-template">
-      <h2>oAuth info</h2>
-      <dl class="dl-horizontal">
-        <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
-        <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
-      </dl>
-    </script>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script>
-      (function() {
-
-        /**
-         * Obtains parameters from the hash of the URL
-         * @return Object
-         */
-        function getHashParams() {
-          var hashParams = {};
-          var e, r = /([^&;=]+)=?([^&;]*)/g,
-              q = window.location.hash.substring(1);
-          while ( e = r.exec(q)) {
-             hashParams[e[1]] = decodeURIComponent(e[2]);
-          }
-          return hashParams;
-        }
-
-        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-            userProfileTemplate = Handlebars.compile(userProfileSource),
-            userProfilePlaceholder = document.getElementById('user-profile');
-
-        var oauthSource = document.getElementById('oauth-template').innerHTML,
-            oauthTemplate = Handlebars.compile(oauthSource),
-            oauthPlaceholder = document.getElementById('oauth');
-
-        var params = getHashParams();
-
-        var access_token = params.access_token,
-            refresh_token = params.refresh_token,
-            error = params.error;
-
-        if (error) {
-          alert('There was an error during the authentication');
-        } else {
-          if (access_token) {
-            // render oauth info
-            oauthPlaceholder.innerHTML = oauthTemplate({
-              access_token: access_token,
-              refresh_token: refresh_token
-            });
-
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me/',
-                headers: {
-                  'Authorization': 'Bearer ' + access_token
-                },
-                success: function(response) {
-                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-
-                  $('#login').hide();
-                  $('#loggedin').show();
-                }
-            });
-          } else {
-              // render initial screen
-              $('#login').show();
-              $('#loggedin').hide();
-          }
-
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function(data) {
-              access_token = data.access_token;
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-            });
-          }, false);
-        }
-      })();
-    </script>
-  </body>
+      <input class="button" type="button" onclick="requestAuth()" value="Login"></br>
+    </div>
+  </div>
+</div>
+                                                                            
+  
+</body>
 </html>
-
