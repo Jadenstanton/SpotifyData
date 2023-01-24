@@ -62,14 +62,23 @@
       </div>
     </div>
   </div> -->
+  
   <div id="tracksSection" class="container">
     <div class="col">
       <div class="mb-3">
         <h1 class="title" style="text-align: center;">Top Tracks</h1>
+        <div class="heading">
+          <h3 class="title">Short Term</h3>
+          <h3 class="title">Medium Term</h3>
+          <h3 class="title">Long Term</h3>
+        </div>
+        <div class="slidecontainer">
+          <input type="range" min="1" max="99" step="49" value="50" class="slider" id="myRange" oninput="updateTracks()">
+        </div>
         <ul id="topTracks" class="trackList">
           <li id="topTracks"></li>
         </ul>
-        <input class="button" type="button" onclick="refreshTopTracks()" value="Refresh Tracks">
+        <input class="button" type="button" onclick="handleTracksRefresh()" value="Refresh Tracks">
       </div>
     </div>
   </div>

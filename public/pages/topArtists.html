@@ -49,11 +49,19 @@
     <div id="artistsSection" class="container">
         <div class="col">
           <div class="mb-3">
-            <h1 class="title" style="text-align: center;">Top Artists</h1>
+            <h1 class="title" style="text-align: center;" >Top Artists</h1>
+            <div class="heading">
+                <h3 class="title">Short Term</h3>
+                <h3 class="title">Medium Term</h3>
+                <h3 class="title">Long Term</h3>
+              </div>
+            <div class="slidecontainer">
+                <input type="range" min="1" max="99" step="49" value="50" class="slider" id="myRange" oninput="updateArtists()">
+              </div>
             <ul id="topArtists" class="artistList">
               <li id="topArtists"></li>
             </ul>
-            <input class="button" type="button" onclick="refreshTopArtists()" value="Refresh Artists">
+            <input class="button" type="button" onclick="handleArtistsRefresh()" value="Refresh Artists">
           </div>
         </div>
       </div>

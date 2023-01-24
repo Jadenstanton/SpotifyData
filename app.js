@@ -7,8 +7,12 @@ var redirect_uri = 'http://127.0.0.1:5501/public/index.html'; // Your redirect u
 
 const AUTHORIZE = 'https://accounts.spotify.com/authorize';
 const TOKEN = 'https://accounts.spotify.com/api/token';
-const TRACKS = 'https://api.spotify.com/v1/me/top/tracks';
+const TRACKS = 'https://api.spotify.com/v1/me/top/tracks?time_range=medium_term';
+const TRACKS_LONG_TERM = 'https://api.spotify.com/v1/me/top/tracks?time_range=long_term';
+const TRACKS_SHORT_TERM = 'https://api.spotify.com/v1/me/top/tracks?time_range=short_term';
 const ARTISTS = 'https://api.spotify.com/v1/me/top/artists';
+const ARTISTS_LONG_TERM = 'https://api.spotify.com/v1/me/top/artists?time_range=long_term';
+const ARTISTS_SHORT_TERM = 'https://api.spotify.com/v1/me/top/artists?time_range=short_term';
 const DEVICES = "https://api.spotify.com/v1/me/player/devices";
 const PROFILE = 'https://api.spotify.com/v1/me';
 
@@ -118,12 +122,12 @@ function handleAuthResponse(){
 }
 
 
-function refreshTopArtists(){
-  callApi( "GET", ARTISTS, null, handleArtistsResponse );
+function refreshTopArtists(range){
+  callApi( "GET", range, null, handleArtistsResponse );
 }
 
-function refreshTopTracks(){
-  callApi( "GET", TRACKS, null, handleTracksResponse );
+function refreshTopTracks(range){
+  callApi( "GET", range, null, handleTracksResponse );
 }
 
 function handleArtistsResponse(){
@@ -163,18 +167,19 @@ function addArtists(item){
   let imageNode = document.createElement("img");
   node.value = item.id;
   node.innerHTML = item.name;
-  imageNode.src = item.images.url;
-  // imageNode.innerHTML = item.images.url;
+  imageNode.src = item.images[2].url;
+  console.log(item.images[0].url);
   document.getElementById("topArtists").appendChild(node).appendChild(imageNode); 
-  // document.getElementById("topArtists").appendChild(imageNode); 
-
 }
 
 function addTracks(item){
   let node = document.createElement("li");
+  let imageNode = document.createElement("img");
+
   node.value = item.id;
   node.innerHTML = item.name;
-  document.getElementById("topTracks").appendChild(node); 
+  imageNode.src = item.album.images[2].url;
+  document.getElementById("topTracks").appendChild(node).appendChild(imageNode); 
 }
 
 function callApi(method, url, body, callback){
@@ -191,4 +196,37 @@ function removeAllItems( elementId ){
   while (node.firstChild) {
       node.removeChild(node.firstChild);
   }
+}
+
+function updateTracks() {
+  var slider = document.getElementById("myRange");
+  let value = slider.value;
+  // console.log(slider.value);
+  if(value == 50){
+    refreshTopTracks(TRACKS);
+  }else if(value == 1){
+    refreshTopTracks(TRACKS_SHORT_TERM);
+  }else{
+    refreshTopTracks(TRACKS_LONG_TERM);
+  }
+}
+
+function updateArtists() {
+  var slider = document.getElementById("myRange");
+  let value = slider.value;
+  // console.log(slider.value);
+  if(value == 50){
+    refreshTopArtists(ARTISTS);
+  }else if(value == 1){
+    refreshTopArtists(ARTISTS_SHORT_TERM);
+  }else{
+    refreshTopArtists(ARTISTS_LONG_TERM);
+  }
+}
+
+function handleTracksRefresh(){
+  refreshTopTracks(TRACKS);
+}
+function handleArtistsRefresh(){
+  refreshTopArtists(ARTISTS);
 }
