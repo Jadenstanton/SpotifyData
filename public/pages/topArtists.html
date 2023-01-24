@@ -4,9 +4,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top Artits</title>
+  <title>Top Artists</title>
   <link rel="stylesheet" href="/public/nav.css">
   <link rel="stylesheet" href="/public/style.css">
+  <link rel="stylesheet" href="/public/list.css">
+
   <script src="/app.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
   <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -47,14 +49,17 @@
     <div id="artistsSection" class="container">
         <div class="col">
           <div class="mb-3">
-            <label for="topArtists" class="form-label" style="color: #FFFFFF;">Top Artists</label>
-            <select id="topArtists" class="form-control">
-            </select>
+            <h1 class="title" style="text-align: center;">Top Artists</h1>
+            <ul id="topArtists" class="artistList">
+              <li id="topArtists"></li>
+            </ul>
             <input class="button" type="button" onclick="refreshTopArtists()" value="Refresh Artists">
           </div>
         </div>
       </div>
+      
                                                                             
   
 </body>
 </html>
+

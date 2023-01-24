@@ -1,0 +1,26 @@
+.artistList{
+    color: #FFFFFF;
+    list-style-type: none;
+    border: 2px solid #1DB954;
+    background-color: black;
+}
+
+
+.artistList li {
+margin: 5px;
+background-color: rgb(24, 24, 24);
+}
+
+.trackList{
+    color: #FFFFFF;
+    list-style-type: none;
+    border: 2px solid #1DB954;
+    background-color: black;
+}
+
+
+.trackList li {
+margin: 5px;
+background-color: rgb(24, 24, 24);
+}
+

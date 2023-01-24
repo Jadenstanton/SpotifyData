@@ -10,6 +10,7 @@ const TOKEN = 'https://accounts.spotify.com/api/token';
 const TRACKS = 'https://api.spotify.com/v1/me/top/tracks';
 const ARTISTS = 'https://api.spotify.com/v1/me/top/artists';
 const DEVICES = "https://api.spotify.com/v1/me/player/devices";
+const PROFILE = 'https://api.spotify.com/v1/me';
 
 function onPageLoad(){
   // client_id = localStorage.getItem("client_id");
@@ -27,8 +28,10 @@ function onPageLoad(){
           // we have an access token so present tracks section and artists section
           document.getElementById("tracksSection").style.display = 'block';  
           document.getElementById("artistsSection").style.display = 'block';  
+          document.getElementById("profileSection").style.display = 'block';  
           refreshTopTracks();
           refreshTopArtists();
+          getProfile();
       }
   }
 }
@@ -156,14 +159,19 @@ function handleTracksResponse(){
 }
 
 function addArtists(item){
-  let node = document.createElement("option");
+  let node = document.createElement("li");
+  let imageNode = document.createElement("img");
   node.value = item.id;
   node.innerHTML = item.name;
-  document.getElementById("topArtists").appendChild(node); 
+  imageNode.src = item.images.url;
+  // imageNode.innerHTML = item.images.url;
+  document.getElementById("topArtists").appendChild(node).appendChild(imageNode); 
+  // document.getElementById("topArtists").appendChild(imageNode); 
+
 }
 
 function addTracks(item){
-  let node = document.createElement("option");
+  let node = document.createElement("li");
   node.value = item.id;
   node.innerHTML = item.name;
   document.getElementById("topTracks").appendChild(node); 
