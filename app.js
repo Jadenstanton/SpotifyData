@@ -1,8 +1,5 @@
-
-// var client_id = 'd5ba16cb907845f3b468c4b9706e23b1'; // Your client id
-// var client_secret = '9aa59fd5f74f4f25a4bbb5266955017e'; // Your secret
-var client_id = 'd5ba16cb907845f3b468c4b9706e23b1'; // Your client id
-var client_secret = '9aa59fd5f74f4f25a4bbb5266955017e'; // Your secret
+var client_id = ''; // Your client id
+var client_secret = ''; // Your secret
 var redirect_uri = 'http://127.0.0.1:5501/public/index.html'; // Your redirect uri
 
 const AUTHORIZE = 'https://accounts.spotify.com/authorize';
@@ -17,8 +14,6 @@ const DEVICES = "https://api.spotify.com/v1/me/player/devices";
 const PROFILE = 'https://api.spotify.com/v1/me';
 
 function onPageLoad(){
-  // client_id = localStorage.getItem("client_id");
-  // client_secret = localStorage.getItem("client_secret");
   if ( window.location.search.length > 0 ){
       handleRedirect();
   }
@@ -59,11 +54,6 @@ function handleRedirect(){
 
 
 function requestAuth(){
-  // client_id = document.getElementById('clientId').value;
-  // client_secret = document.getElementById('clientSecret').value;
-  // localStorage.setItem('client_id', client_id);
-  // localStorage.setItem('client_secret', client_secret);
-
   let url = AUTHORIZE;
   url += '?client_id=' + client_id;
   url += '&response_type=code';
@@ -121,6 +111,9 @@ function handleAuthResponse(){
   }
 }
 
+function getProfile(){
+  callApi( "GET", PROFILE, null, handleProfileResponse );
+}
 
 function refreshTopArtists(range){
   callApi( "GET", range, null, handleArtistsResponse );
@@ -128,6 +121,21 @@ function refreshTopArtists(range){
 
 function refreshTopTracks(range){
   callApi( "GET", range, null, handleTracksResponse );
+}
+
+function handleProfileResponse(){
+  if ( this.status == 200 ){
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    removeAllItems( "profile" );
+}
+else if ( this.status == 401 ){
+    refreshAccessToken()
+}
+else {
+    console.log(this.responseText);
+    alert(this.responseText);
+}
 }
 
 function handleArtistsResponse(){
