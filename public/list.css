@@ -24,3 +24,17 @@ margin: 5px;
 background-color: rgb(24, 24, 24);
 }
 
+.recTracksList{
+    color: #FFFFFF;
+    list-style-type: none;
+    border: 2px solid #1DB954;
+    background-color: black;
+}
+
+
+.recTracksList li {
+margin: 5px;
+background-color: rgb(24, 24, 24);
+}
+
+

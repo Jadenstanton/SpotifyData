@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top Artists</title>
+  <title>Recommended</title>
   <link rel="stylesheet" href="/public/nav.css">
   <link rel="stylesheet" href="/public/style.css">
   <link rel="stylesheet" href="/public/list.css">
@@ -24,7 +24,7 @@
 <body style="background-color: rgb(24, 24, 24);" onload="onPageLoad()">
   
     <nav class="navbar navbar-expand-sm navbar-mainbg">
-        <a class="navbar-brand navbar-logo" href="#">Top Artists</a>
+        <a class="navbar-brand navbar-logo" href="#">Recommended</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <i class="fas fa-bars text-white"></i>
         </button>
@@ -40,31 +40,33 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/public/pages/topTracks.html"><i class="fa-solid fa-music"></i></i>Top Tracks</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="topArtists.html"><i class="fa-solid fa-microphone"></i>Top Artists</a>
-                </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/public/pages/recommend.html"><i class="fa-solid fa-microphone"></i>Recommended</a>
-              </li>
+                    <a class="nav-link" href="/public/pages/topArtists.html"><i class="fa-solid fa-microphone"></i>Top Artists</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="recommend.html"><i class="fa-solid fa-microphone"></i>Recommended</a>
+                </li>
             </ul>
         </div>
     </nav>
-    <div id="artistsSection" class="container">
+    <div id="recommendedSection" class="container">
         <div class="col">
           <div class="mb-3">
-            <h1 class="title" style="text-align: center;" >Top Artists</h1>
-            <div class="heading">
-                <h3 class="title">Short Term</h3>
-                <h3 class="title">Medium Term</h3>
-                <h3 class="title">Long Term</h3>
-              </div>
-            <div class="slidecontainer">
-                <input type="range" min="1" max="99" step="49" value="50" class="slider" id="myRange" oninput="updateArtists()">
-              </div>
-            <ul id="topArtists" class="artistList">
-              <li id="topArtists"></li>
+            <h1 class="title" style="text-align: center;" >Recommend Tracks/Artists</h1>
+            <div>
+              <input class="search" type="text" id="searchKey" style="text-align: center;" placeholder="Search"/>  
+            </div>
+            <div class="recButton">
+              <button class="button" style="border: 2px solid #1DB954;" type="button" onclick="fetchTrack()" id="btn1">Recommend Tracks</button>
+              <button class="button" style="border: 2px solid #1DB954;" type="button" onclick="recommendArtists()" id="btn2">Recommend Artists</button>  
+            </div>
+         
+            <ul id="recTracks" class="recTracksList">
+              <li id="recTracks"></li>
             </ul>
-            <input class="button" type="button" onclick="handleArtistsRefresh()" value="Refresh Artists">
+            <ul id="recommendedArtists" class="recommededArtistsList">
+              <li id="recommendedArtists"></li>
+            </ul>
           </div>
         </div>
       </div>
