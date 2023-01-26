@@ -12,6 +12,7 @@ const ARTISTS_LONG_TERM = 'https://api.spotify.com/v1/me/top/artists?time_range=
 const ARTISTS_SHORT_TERM = 'https://api.spotify.com/v1/me/top/artists?time_range=short_term';
 const DEVICES = "https://api.spotify.com/v1/me/player/devices";
 const PROFILE = 'https://api.spotify.com/v1/me';
+const TRACK_REC = 'https://api.spotify.com/v1/search?';
 
 function onPageLoad(){
   if ( window.location.search.length > 0 ){
@@ -111,6 +112,10 @@ function handleAuthResponse(){
   }
 }
 
+function searchTrack(name){
+  callApi( "GET", name, null, handleRecTrackResponse );
+}
+
 function getProfile(){
   callApi( "GET", PROFILE, null, handleProfileResponse );
 }
@@ -128,14 +133,29 @@ function handleProfileResponse(){
     var data = JSON.parse(this.responseText);
     console.log(data);
     removeAllItems( "profile" );
+  }
+  else if ( this.status == 401 ){
+      refreshAccessToken()
+  }
+  else {
+      console.log(this.responseText);
+      alert(this.responseText);
+  }
 }
-else if ( this.status == 401 ){
-    refreshAccessToken()
-}
-else {
+
+function handleRecTrackResponse(){
+  if ( this.status == 200 ){
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    removeAllItems("recTracks");
+    data.tracks.items.forEach(item => addTrackRec(item));
+
+  }else if(this.status == 401){
+    refreshAccessToken();
+  }else{
     console.log(this.responseText);
-    alert(this.responseText);
-}
+    alert(this.responseText)
+  }
 }
 
 function handleArtistsResponse(){
@@ -168,6 +188,16 @@ function handleTracksResponse(){
       console.log(this.responseText);
       alert(this.responseText);
   }
+}
+
+function addTrackRec(item){
+  let node = document.createElement("li");
+  let imageNode = document.createElement("img");
+  node.value = item.id;
+  node.innerHTML = item.name;
+  imageNode.src = item.album.images[2].url;
+  // console.log(item.album.images[0].url);
+  document.getElementById("recTracks").appendChild(node).appendChild(imageNode); 
 }
 
 function addArtists(item){
@@ -238,3 +268,20 @@ function handleTracksRefresh(){
 function handleArtistsRefresh(){
   refreshTopArtists(ARTISTS);
 }
+
+
+// recommend tracks
+// get song from search, from song json get artist name and genre to pass as seeds into rec call
+function fetchTrack(){
+  var value = document.getElementById("searchKey").value;
+  let url = TRACK_REC;
+  url += 'q=track%3A' + value;
+  url += '&type=track&limit=20';
+  
+  searchTrack(url);
+}
+
+// function requestTrackRec(track){
+// }
+
+// create get track functions to get searched track by id so that genre can be accessed
