@@ -1,3 +1,4 @@
+
 var client_id = ''; // Your client id
 var client_secret = ''; // Your secret
 var redirect_uri = 'http://127.0.0.1:5501/public/index.html'; // Your redirect uri
@@ -12,7 +13,9 @@ const ARTISTS_LONG_TERM = 'https://api.spotify.com/v1/me/top/artists?time_range=
 const ARTISTS_SHORT_TERM = 'https://api.spotify.com/v1/me/top/artists?time_range=short_term';
 const DEVICES = "https://api.spotify.com/v1/me/player/devices";
 const PROFILE = 'https://api.spotify.com/v1/me';
-const TRACK_REC = 'https://api.spotify.com/v1/search?';
+const SEARCH_TRACK = 'https://api.spotify.com/v1/search?';
+const ARTIST_INFO = 'https://api.spotify.com/v1/artists/';
+const TRACK_REC = 'https://api.spotify.com/v1/recommendations?'
 
 function onPageLoad(){
   if ( window.location.search.length > 0 ){
@@ -112,8 +115,16 @@ function handleAuthResponse(){
   }
 }
 
+function getRecTracks(recUrl){
+  callApi( "GET", recUrl, null, handleRecTrackResponse );
+}
+
+function getTrack(artistId){
+  callApi( "GET", artistId, null, handleGetArtistInfoResponse);
+}
+
 function searchTrack(name){
-  callApi( "GET", name, null, handleRecTrackResponse );
+  callApi( "GET", name, null, handleSearchTrackResponse );
 }
 
 function getProfile(){
@@ -148,7 +159,46 @@ function handleRecTrackResponse(){
     var data = JSON.parse(this.responseText);
     console.log(data);
     removeAllItems("recTracks");
-    data.tracks.items.forEach(item => addTrackRec(item));
+    data.tracks.forEach(item => addTrackRec(item));
+
+  }else if(this.status == 401){
+    refreshAccessToken();
+  }else{
+    console.log(this.responseText);
+    alert(this.responseText)
+  }
+}
+
+function handleGetArtistInfoResponse(){
+  if ( this.status == 200 ){
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    let seed_artists = data.id;
+    let seed_genres = data.genres[0];
+    let seedSong = localStorage.getItem('seed_track');
+    // console.log(seed_genres);
+    // console.log(seed_artists);
+    // console.log(seedSong);
+    requestTrackRec(seed_artists, seed_genres, seedSong);
+
+  }else if(this.status == 401){
+    refreshAccessToken();
+  }else{
+    console.log(this.responseText);
+    alert(this.responseText)
+  }
+}
+
+function handleSearchTrackResponse(){// send artist id to get genres 
+  if ( this.status == 200 ){
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    removeAllItems("recTracks");
+    let seed_tracks = data.tracks.items[0].id;
+    localStorage.setItem('seed_track', seed_tracks);
+    let artist_id = data.tracks.items[0].artists[0].id
+    // console.log('artist_id: ', artist_id);
+    getArtistInfo(artist_id)
 
   }else if(this.status == 401){
     refreshAccessToken();
@@ -180,6 +230,8 @@ function handleTracksResponse(){
       console.log(data);
       removeAllItems( "topTracks" );
       data.items.forEach(item => addTracks(item));
+     
+
   }
   else if ( this.status == 401 ){
       refreshAccessToken()
@@ -197,6 +249,8 @@ function addTrackRec(item){
   node.innerHTML = item.name;
   imageNode.src = item.album.images[2].url;
   // console.log(item.album.images[0].url);
+  document.getElementById("recTracks").style.display = "block";
+
   document.getElementById("recTracks").appendChild(node).appendChild(imageNode); 
 }
 
@@ -207,6 +261,8 @@ function addArtists(item){
   node.innerHTML = item.name;
   imageNode.src = item.images[2].url;
   console.log(item.images[0].url);
+  document.getElementById("topArtists").style.display = "block";
+
   document.getElementById("topArtists").appendChild(node).appendChild(imageNode); 
 }
 
@@ -217,6 +273,8 @@ function addTracks(item){
   node.value = item.id;
   node.innerHTML = item.name;
   imageNode.src = item.album.images[2].url;
+  document.getElementById("topTracks").style.display = "block";
+
   document.getElementById("topTracks").appendChild(node).appendChild(imageNode); 
 }
 
@@ -270,18 +328,31 @@ function handleArtistsRefresh(){
 }
 
 
-// recommend tracks
-// get song from search, from song json get artist name and genre to pass as seeds into rec call
 function fetchTrack(){
   var value = document.getElementById("searchKey").value;
-  let url = TRACK_REC;
+  let url = SEARCH_TRACK;
   url += 'q=track%3A' + value;
   url += '&type=track&limit=20';
   
   searchTrack(url);
 }
 
-// function requestTrackRec(track){
-// }
+function getArtistInfo(artistId){
+  let url = ARTIST_INFO;
+  url += artistId;
+  // console.log("artist url: ", url);
+  // console.log('seed song: ');
 
-// create get track functions to get searched track by id so that genre can be accessed
+  getTrack(url);
+}
+
+function requestTrackRec(seed_artists, seed_genres, seed_tracks){
+  let url = TRACK_REC;
+  url += 'limit=20';
+  url += '&seed_artists=' + seed_artists;
+  url += '&seed_genres=' + seed_genres;
+  url += '&seed_tracks=' + seed_tracks;
+  // console.log(url);
+
+  getRecTracks(url);
+}

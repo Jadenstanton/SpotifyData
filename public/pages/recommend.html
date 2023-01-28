@@ -56,16 +56,12 @@
             <div>
               <input class="search" type="text" id="searchKey" style="text-align: center;" placeholder="Search"/>  
             </div>
-            <div class="recButton">
-              <button class="button" style="border: 2px solid #1DB954;" type="button" onclick="fetchTrack()" id="btn1">Recommend Tracks</button>
-              <button class="button" style="border: 2px solid #1DB954;" type="button" onclick="recommendArtists()" id="btn2">Recommend Artists</button>  
+            <div >
+              <button class="button" type="button" onclick="fetchTrack()" id="btn1" style="margin: 5px;">Recommend Tracks</button>
             </div>
          
-            <ul id="recTracks" class="recTracksList">
+            <ul id="recTracks" class="recTracksList" style="display: none;">
               <li id="recTracks"></li>
-            </ul>
-            <ul id="recommendedArtists" class="recommededArtistsList">
-              <li id="recommendedArtists"></li>
             </ul>
           </div>
         </div>
