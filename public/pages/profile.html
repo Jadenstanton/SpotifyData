@@ -21,7 +21,7 @@
         <script src="/nav.js"></script>
       </head>
 
-<body style="background-color: rgb(24, 24, 24);">
+<body style="background-color: rgb(24, 24, 24);" onload="onPageLoad()">
   
     <nav class="navbar navbar-expand-sm navbar-mainbg">
         <a class="navbar-brand navbar-logo" href="#">Profile</a>
@@ -53,9 +53,9 @@
         <div class="col">
           <div class="mb-3">
             <h1 class="title" style="text-align: center;">Profile</h1>
-            <ul id="profile" class="artistList">
-              <li id="profile"></li>
-            </ul>
+            <table id="profile" class="trackList" style="display: none; width: 100%;">
+                <tr id="profile"></tr>
+              </table>
             <input class="button" type="button" onclick="getProfile()" value="Get Profile">
           </div>
         </div>

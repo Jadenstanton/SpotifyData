@@ -61,10 +61,11 @@
             <div class="slidecontainer">
                 <input type="range" min="1" max="99" step="49" value="50" class="slider" id="myRange" oninput="updateArtists()">
               </div>
-            <ul id="topArtists" class="artistList" style="display: none;">
-              <li id="topArtists"></li>
-            </ul>
+              <table id="topArtists" class="artistList" style="display: none; width: 100%;">
+                <tr id="rowArtists"></tr>
+              </table>
             <input class="button" type="button" onclick="handleArtistsRefresh()" value="Refresh Artists">
+            
           </div>
         </div>
       </div>

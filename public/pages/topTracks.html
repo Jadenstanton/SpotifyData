@@ -78,9 +78,9 @@
         <div class="slidecontainer">
           <input type="range" min="1" max="99" step="49" value="50" class="slider" id="myRange" oninput="updateTracks()">
         </div>
-        <ul id="topTracks" class="trackList" style="display: none;">
-          <li id="topTracks"></li>
-        </ul>
+        <table id="topTracks" class="trackList" style="display: none; width: 100%;">
+          <tr id="rowTracks"></tr>
+        </table>
         <input class="button" type="button" onclick="handleTracksRefresh()" value="Refresh Tracks">
       </div>
     </div>

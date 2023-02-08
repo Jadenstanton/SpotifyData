@@ -1,7 +1,7 @@
 
 var client_id = ''; // Your client id
 var client_secret = ''; // Your secret
-var redirect_uri = 'http://127.0.0.1:5501/public/index.html'; // Your redirect uri
+var redirect_uri = ''; // Your redirect uri
 
 const AUTHORIZE = 'https://accounts.spotify.com/authorize';
 const TOKEN = 'https://accounts.spotify.com/api/token';
@@ -127,10 +127,6 @@ function searchTrack(name){
   callApi( "GET", name, null, handleSearchTrackResponse );
 }
 
-function getProfile(){
-  callApi( "GET", PROFILE, null, handleProfileResponse );
-}
-
 function refreshTopArtists(range){
   callApi( "GET", range, null, handleArtistsResponse );
 }
@@ -139,18 +135,23 @@ function refreshTopTracks(range){
   callApi( "GET", range, null, handleTracksResponse );
 }
 
+function getProfile(){
+  callApi( "GET", PROFILE, null, handleProfileResponse );
+}
+
 function handleProfileResponse(){
   if ( this.status == 200 ){
     var data = JSON.parse(this.responseText);
     console.log(data);
-    removeAllItems( "profile" );
-  }
-  else if ( this.status == 401 ){
-      refreshAccessToken()
-  }
-  else {
-      console.log(this.responseText);
-      alert(this.responseText);
+    removeAllItems("profile");
+    // data.item.forEach(item => addProfileInfo(item));
+    addProfileInfo(data);
+
+  }else if(this.status == 401){
+    refreshAccessToken();
+  }else{
+    console.log(this.responseText);
+    alert(this.responseText)
   }
 }
 
@@ -243,39 +244,97 @@ function handleTracksResponse(){
 }
 
 function addTrackRec(item){
-  let node = document.createElement("li");
+  let rowNode = document.createElement("tr");
+  let nameNode = document.createElement("td");
   let imageNode = document.createElement("img");
-  node.value = item.id;
-  node.innerHTML = item.name;
-  imageNode.src = item.album.images[2].url;
-  // console.log(item.album.images[0].url);
-  document.getElementById("recTracks").style.display = "block";
 
-  document.getElementById("recTracks").appendChild(node).appendChild(imageNode); 
+  nameNode.value = item.id;
+  nameNode.className = "titleText";
+  nameNode.innerHTML = item.name;
+  imageNode.src = item.album.images[1].url;
+
+  rowNode.appendChild(imageNode);
+  rowNode.appendChild(nameNode);
+
+  document.getElementById("recTrack").style.display = "block";
+  document.getElementById("recTrack").appendChild(rowNode);
 }
 
 function addArtists(item){
-  let node = document.createElement("li");
+  let rowNode = document.createElement("tr");
+  let nameNode = document.createElement("td");
   let imageNode = document.createElement("img");
-  node.value = item.id;
-  node.innerHTML = item.name;
-  imageNode.src = item.images[2].url;
-  console.log(item.images[0].url);
-  document.getElementById("topArtists").style.display = "block";
 
-  document.getElementById("topArtists").appendChild(node).appendChild(imageNode); 
+  nameNode.value = item.id;
+  nameNode.className = "titleText";
+  nameNode.innerHTML = item.name;
+  imageNode.src = item.images[1].url;
+
+  rowNode.appendChild(imageNode);
+  rowNode.appendChild(nameNode);
+
+  document.getElementById("topArtists").style.display = "block";
+  document.getElementById("topArtists").appendChild(rowNode); 
 }
 
 function addTracks(item){
-  let node = document.createElement("li");
+  let rowNode = document.createElement("tr");
+  let nameNode = document.createElement("td");
   let imageNode = document.createElement("img");
 
-  node.value = item.id;
-  node.innerHTML = item.name;
-  imageNode.src = item.album.images[2].url;
-  document.getElementById("topTracks").style.display = "block";
+  nameNode.value = item.id;
+  nameNode.className = "titleText";
+  nameNode.innerHTML = item.name;
+  imageNode.src = item.album.images[1].url;
 
-  document.getElementById("topTracks").appendChild(node).appendChild(imageNode); 
+  rowNode.appendChild(imageNode);
+  rowNode.appendChild(nameNode);
+
+  document.getElementById("topTracks").style.display = "block";
+  document.getElementById("topTracks").appendChild(rowNode); 
+}
+
+function addProfileInfo(item){
+  let nameRowNode = document.createElement("tr");
+  let nameNode = document.createElement("td");
+  let imageNode = document.createElement("img");
+
+  let followersRowNode = document.createElement("tr");
+  let followersCount = document.createElement("td");
+  let followersTitle = document.createElement("td");
+
+  let accountRowNode = document.createElement("tr");
+  let accountType = document.createElement("td");
+  
+  accountType.className = "titleText";
+  accountType.innerHTML = item.product;
+  accountType.colSpan = "2";
+
+  followersCount.className = "titleText";
+  followersCount.innerHTML = item.followers.total;
+  followersTitle.className = "titleText";
+  followersTitle.innerHTML = "Followers";
+
+  nameNode.rowSpan = "2";
+  nameNode.value = item.id;
+  nameNode.className = "titleText";
+  nameNode.innerHTML = item.display_name;
+  imageNode.rowSpan = "2";
+  imageNode.src = item.images[0].url;
+
+  nameRowNode.appendChild(imageNode);
+  nameRowNode.appendChild(nameNode);
+
+  followersRowNode.appendChild(followersTitle);
+  followersRowNode.appendChild(followersCount);
+
+  accountRowNode.appendChild(accountType);
+
+  document.getElementById("profile").style.display = "block";
+  document.getElementById("profile").appendChild(nameRowNode);
+  document.getElementById("profile").appendChild(followersRowNode);
+  document.getElementById("profile").appendChild(accountRowNode);
+
 }
 
 function callApi(method, url, body, callback){
