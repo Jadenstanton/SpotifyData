@@ -1,7 +1,7 @@
 
-var client_id = ''; // Your client id
-var client_secret = ''; // Your secret
-var redirect_uri = ''; // Your redirect uri
+var client_id = 'd5ba16cb907845f3b468c4b9706e23b1'; // Your client id
+var client_secret = '9aa59fd5f74f4f25a4bbb5266955017e'; // Your secret
+var redirect_uri = 'http://127.0.0.1:5501/public/index.html'; // Your redirect uri
 
 const AUTHORIZE = 'https://accounts.spotify.com/authorize';
 const TOKEN = 'https://accounts.spotify.com/api/token';
@@ -143,7 +143,7 @@ function handleProfileResponse(){
   if ( this.status == 200 ){
     var data = JSON.parse(this.responseText);
     console.log(data);
-    removeAllItems("profile");
+    // removeAllItems("profile");
     // data.item.forEach(item => addProfileInfo(item));
     addProfileInfo(data);
 
@@ -295,45 +295,35 @@ function addTracks(item){
 }
 
 function addProfileInfo(item){
-  let nameRowNode = document.createElement("tr");
-  let nameNode = document.createElement("td");
-  let imageNode = document.createElement("img");
+  let followersCount = document.createElement("div");
+  let accountType = document.createElement("div");
+  let country = document.createElement("div");
+  let profileImage = document.createElement("div");
+  let displayName = document.createElement("div");
 
-  let followersRowNode = document.createElement("tr");
-  let followersCount = document.createElement("td");
-  let followersTitle = document.createElement("td");
+  let pI = document.createElement("img");
 
-  let accountRowNode = document.createElement("tr");
-  let accountType = document.createElement("td");
-  
-  accountType.className = "titleText";
-  accountType.innerHTML = item.product;
-  accountType.colSpan = "2";
 
-  followersCount.className = "titleText";
+  followersCount.className = "followerCount";
   followersCount.innerHTML = item.followers.total;
-  followersTitle.className = "titleText";
-  followersTitle.innerHTML = "Followers";
+  displayName.className = "DisplayName";
+  displayName.innerHTML = item.display_name;
+  accountType.className = "AccountType";
+  accountType.innerHTML = item.product;
+  country.className = "Country";
+  country.innerHTML = item.country;
+  profileImage.className = "profileImage";
+  pI.src = item.images[0].url;
 
-  nameNode.rowSpan = "2";
-  nameNode.value = item.id;
-  nameNode.className = "titleText";
-  nameNode.innerHTML = item.display_name;
-  imageNode.rowSpan = "2";
-  imageNode.src = item.images[0].url;
+  document.getElementById("profileContainer").style.display = "grid";
+  document.getElementById("profileContainer").appendChild(followersCount);
+  document.getElementById("profileContainer").appendChild(profileImage).appendChild(pI);
+  document.getElementById("profileContainer").appendChild(displayName);
+  document.getElementById("profileContainer").appendChild(country);
+  document.getElementById("profileContainer").appendChild(accountType);
 
-  nameRowNode.appendChild(imageNode);
-  nameRowNode.appendChild(nameNode);
-
-  followersRowNode.appendChild(followersTitle);
-  followersRowNode.appendChild(followersCount);
-
-  accountRowNode.appendChild(accountType);
-
-  document.getElementById("profile").style.display = "block";
-  document.getElementById("profile").appendChild(nameRowNode);
-  document.getElementById("profile").appendChild(followersRowNode);
-  document.getElementById("profile").appendChild(accountRowNode);
+  // document.getElementById("profile").appendChild(followersRowNode);
+  // document.getElementById("profile").appendChild(accountRowNode);
 
 }
 
@@ -346,12 +336,12 @@ function callApi(method, url, body, callback){
   xhr.onload = callback;
 }
 
-function removeAllItems( elementId ){
-  let node = document.getElementById(elementId);
-  while (node.firstChild) {
-      node.removeChild(node.firstChild);
-  }
-}
+// function removeAllItems( elementId ){
+//   let node = document.getElementById(elementId);
+//   while (node.firstChild) {
+//       node.removeChild(node.firstChild);
+//   }
+// }
 
 function updateTracks() {
   var slider = document.getElementById("myRange");

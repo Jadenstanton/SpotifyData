@@ -52,3 +52,44 @@ tr:hover {
     font-size: 70px;
     text-align: center;
 }
+
+.profileContainer {  display: grid;
+    /* grid-template-columns: 1.6fr 2fr 1.5fr;
+    grid-template-rows: 0.6fr 0.6fr 0.6fr 2.4fr; */
+    gap: 10px;
+    /* grid-auto-flow: row; */
+    grid-template-areas:
+      "Image Image Image"
+      "followerCount DisplayName Country"
+      "followerCount AccountType AccountType"
+;
+      background-color: #1DB954;
+      padding: 10px;
+  }
+  .profileContainer > div {
+    background-color: #000000;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 50px;
+  }
+  
+  .profileImage { 
+    grid-area: Image;
+    color: #FFFFFF; }
+  
+  .followerCount { 
+    grid-area: followerCount;
+    color: #FFFFFF; }
+  
+  .DisplayName { 
+    grid-area: DisplayName;
+    color: #FFFFFF; }
+  
+  .AccountType { 
+    grid-area: AccountType;
+    color: #FFFFFF; }
+  
+  .Country { 
+    grid-area: Country;
+    color: #FFFFFF; }
+  

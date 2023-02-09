@@ -53,10 +53,17 @@
         <div class="col">
           <div class="mb-3">
             <h1 class="title" style="text-align: center;">Profile</h1>
-            <table id="profile" class="trackList" style="display: none; width: 100%;">
+            <!-- <table id="profile" class="trackList" style="display: none; width: 100%;">
                 <tr id="profile"></tr>
-              </table>
-            <input class="button" type="button" onclick="getProfile()" value="Get Profile">
+              </table> -->
+            <input class="button" type="button" onclick="getProfile()" value="Get Profile" style="margin-bottom: 5px;">
+            <div class="profileContainer" id="profileContainer" style="display: none;">
+                <div class="profileImage"></div>
+                <div class="followerCount"></div>
+                <div class="DisplayName"></div>
+                <div class="AccountType"></div>
+                <div class="Country"></div>
+              </div>
           </div>
         </div>
       </div>
