@@ -2,7 +2,38 @@
     --primary: #1DB954;
     --dark:#191414;
     --light: #FFFFFF;
-} 
+}
+body {
+  background-image: url("");
+  /* background-size: cover; */
+  background-position: center;
+}
+
+.overlay {
+  position: scroll;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+}
+/* body::before {
+  content: "";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: url("");
+  background-size: cover;
+  background-color: transparent;
+  /* background-color: rgb(24, 24, 24);
+  filter: (10px);
+} */
 
 .center{
 
@@ -106,4 +137,16 @@
   /* justify-content: space-between; */
   width:100%;
   margin: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between; /* Optional - this will evenly space the buttons */
+}
+.button-container button {
+  display: inline-block;
+  margin-right: 10px; /* Add some margin to the right of each button */
+}
+.button-container button:last-child {
+  margin-right: 0; /* Remove margin from the last button to prevent extra spacing */
 }

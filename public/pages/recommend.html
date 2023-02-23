@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,54 +22,63 @@
   <script src="/nav.js"></script>
 </head>
 
-<body style="background-color: rgb(24, 24, 24);" onload="onPageLoad()">
-  
-    <nav class="navbar navbar-expand-sm navbar-mainbg">
-        <a class="navbar-brand navbar-logo" href="#">Recommended</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fas fa-bars text-white"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
-          <li class="nav-item">
-                    <a class="nav-link" href="/public/index.html"><i class="fa-solid fa-user-lock"></i>Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/public/pages/profile.html"><i class="fa-regular fa-user"></i></i>Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/public/pages/topTracks.html"><i class="fa-solid fa-music"></i></i>Top Tracks</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/public/pages/topArtists.html"><i class="fa-solid fa-microphone"></i>Top Artists</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="recommend.html"><i class="fa-solid fa-microphone"></i>Recommended</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div id="recommendedSection" class="container">
-        <div class="col">
-          <div class="mb-3">
-            <h1 class="title" style="text-align: center;" >Recommend Tracks/Artists</h1>
-            <div>
-              <input class="search" type="text" id="searchKey" style="text-align: center;" placeholder="Search"/>  
-            </div>
+<body class="overlay" style="background-color: rgb(24, 24, 24);" onload="onPageLoad()">
 
-              <button class="button" type="button" onclick="fetchTrack()" id="btn1" style="margin-top: 5px; margin-bottom: 5px;">Recommend Tracks</button>
-
-         
-            <table id="recTrack" class="recTracksList" style="display: none; width: 100%;">
-              <tr id="recTracks"></tr>
-            </table>
-          </div>
+  <nav class="navbar navbar-expand-sm navbar-mainbg">
+    <a class="navbar-brand navbar-logo" href="#">Recommended</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars text-white"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <div class="hori-selector">
+          <div class="left"></div>
+          <div class="right"></div>
         </div>
+        <li class="nav-item">
+          <a class="nav-link" href="/public/index.html"><i class="fa-solid fa-user-lock"></i>Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/public/pages/profile.html"><i class="fa-regular fa-user"></i></i>Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/public/pages/topTracks.html"><i class="fa-solid fa-music"></i></i>Top Tracks</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/public/pages/topArtists.html"><i class="fa-solid fa-microphone"></i>Top Artists</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="recommend.html"><i class="fa-solid fa-microphone"></i>Recommended</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div id="recommendedSection" class="container">
+    <div class="col">
+      <div class="mb-3">
+        <h1 class="title" style="text-align: center;">Recommend Tracks/Artists</h1>
+        <div>
+          <input class="search" type="text" id="searchKey" style="text-align: center;" placeholder="Search" />
+        </div>
+        <div class="button-container">
+          <button class="button" type="button" onclick="fetchTrack()" id="btn1"
+            style="margin-top: 5px; margin-bottom: 5px;">Recommend Tracks/Artists</button>
+          <button class="button" type="button" onclick="refreshRecTracks()" id="refreshButton"
+            style="margin-top: 5px; margin-bottom: 5px;">Refresh Tracks/Artists</button>
+        </div>
+
+
+
+        <table id="recTrack" class="recTracksList" style="display: none; width: 100%;">
+          <tr id="recTracks"></tr>
+        </table>
       </div>
-      
-                                                                            
-  
-</body>
-</html>
+    </div>
+  </div>
 
+
+
+</body>
+
+</html>

@@ -1,73 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Profile</title>
-        <link rel="stylesheet" href="/public/nav.css">
-        <link rel="stylesheet" href="/public/style.css">
-        <link rel="stylesheet" href="/public/list.css">
-      
-        <script src="/app.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-        <script src="https://kit.fontawesome.com/0c4f512734.js" crossorigin="anonymous"></script>
-        <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
-        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css'>
-        <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
-        <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js'></script>
-        <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-        <script src="/nav.js"></script>
-      </head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/public/nav.css">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/list.css">
+
+    <script src="/app.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/0c4f512734.js" crossorigin="anonymous"></script>
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css'>
+    <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
+    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="/nav.js"></script>
+</head>
 
 <body style="background-color: rgb(24, 24, 24);" onload="onPageLoad()">
-  
+
     <nav class="navbar navbar-expand-sm navbar-mainbg">
         <a class="navbar-brand navbar-logo" href="#">Profile</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fas fa-bars text-white"></i>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars text-white"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-                <div class="hori-selector"><div class="left"></div><div class="right"></div></div>
-          <li class="nav-item">
+                <div class="hori-selector">
+                    <div class="left"></div>
+                    <div class="right"></div>
+                </div>
+                <li class="nav-item">
                     <a class="nav-link" href="/public/index.html"><i class="fa-solid fa-user-lock"></i>Login</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="profile.html"><i class="fa-regular fa-user"></i></i>Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/public/pages/topTracks.html"><i class="fa-solid fa-music"></i></i>Top Tracks</a>
+                    <a class="nav-link" href="/public/pages/topTracks.html"><i class="fa-solid fa-music"></i></i>Top
+                        Tracks</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/public/pages/topArtists.html"><i class="fa-solid fa-microphone"></i>Top Artists</a>
+                    <a class="nav-link" href="/public/pages/topArtists.html"><i class="fa-solid fa-microphone"></i>Top
+                        Artists</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/public/pages/recommend.html"><i class="fa-solid fa-microphone"></i>Recommended</a>
+                    <a class="nav-link" href="/public/pages/recommend.html"><i
+                            class="fa-solid fa-microphone"></i>Recommended</a>
                 </li>
             </ul>
         </div>
     </nav>
     <div id="profileSection" class="container">
         <div class="col">
-          <div class="mb-3">
-            <h1 class="title" style="text-align: center;">Profile</h1>
-            <!-- <table id="profile" class="trackList" style="display: none; width: 100%;">
+            <div class="mb-3">
+                <h1 class="title" style="text-align: center;">Profile</h1>
+                <!-- <table id="profile" class="trackList" style="display: none; width: 100%;">
                 <tr id="profile"></tr>
               </table> -->
-            <input class="button" type="button" onclick="getProfile()" value="Get Profile" style="margin-bottom: 5px;">
-            <div class="profileContainer" id="profileContainer" style="display: none;">
-                <div class="profileImage"></div>
-                <div class="followerCount"></div>
-                <div class="DisplayName"></div>
-                <div class="AccountType"></div>
-                <div class="Country"></div>
-              </div>
-          </div>
+                <input class="button" type="button" onclick="getProfile()" value="Get Profile"
+                    style="margin-bottom: 5px;">
+                <div class="profileContainer" id="profileContainer" style="display: none;">
+                    <div class="profileImage"></div>
+                    <div class="followerCount"></div>
+                    <div class="DisplayName"></div>
+                    <div class="AccountType"></div>
+                    <div class="Country"></div>
+                </div>
+            </div>
         </div>
-      </div>
-                                                                            
-  
+    </div>
+
+
 </body>
+
 </html>

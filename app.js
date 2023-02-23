@@ -17,39 +17,81 @@ const SEARCH_TRACK = 'https://api.spotify.com/v1/search?';
 const ARTIST_INFO = 'https://api.spotify.com/v1/artists/';
 const TRACK_REC = 'https://api.spotify.com/v1/recommendations?'
 
-function onPageLoad(){
-  if ( window.location.search.length > 0 ){
-      handleRedirect();
+function onPageLoad() {
+  if (window.location.search.length > 0) {
+    handleRedirect();
   }
-  else{
-      access_token = localStorage.getItem("access_token");
-      if ( access_token == null ){
-          // we don't have an access token so present token section
-          document.getElementById("tokenSection").style.display = 'block';  
+  else {
+    access_token = localStorage.getItem("access_token");
+    if (access_token == null) {
+      // we don't have an access token so present token section
+      document.getElementById("tokenSection").style.display = 'block';
+    }
+    else {
+      // we have an access token so present sections based on the current page
+      var currentPath = window.location.pathname;
+      console.log('current path=', currentPath);
+      if (currentPath.includes("/topTracks")) {
+        document.getElementById("tracksSection").style.display = 'block';
+        var sliderValue = localStorage.getItem(window.location.pathname + "_slider_value");
+        if (sliderValue != null) {
+          document.getElementById("myRange").value = sliderValue;
+          updateTracks();
+        }
+
+        let oldTracks = JSON.parse(localStorage.getItem("stored_tracks")) || [];
+        // console.log('list of old tracks', oldTracks);
+        // Display each artist on the page
+        oldTracks.forEach(function (track) {
+          addTracks(track);
+          // console.log("added tracks");
+        });
+        // refreshTopTracks();
+      } else if (currentPath.includes("/topArtists")) {
+        document.getElementById("artistsSection").style.display = 'block';
+        var sliderValue = localStorage.getItem(window.location.pathname + "_slider_value");
+        if (sliderValue != null) {
+          document.getElementById("myRange").value = sliderValue;
+          updateArtists();
+        }
+
+        // Retrieve the stored artists from local storage
+        let oldArtists = JSON.parse(localStorage.getItem("stored_artists")) || [];
+        // console.log('list of old artists', oldArtists);
+        oldArtists.forEach(function (artist) {
+          addArtists(artist);
+          // console.log("added artists");
+        });
+        // refreshTopArtists();
+      } else if (currentPath.includes("/profile")) {
+        document.getElementById("profileSection").style.display = 'block';
+        getProfile();
+      } else if (currentPath.includes("recommend")) {
+        document.getElementById("recommendedSection").style.display = 'block';
+        let oldRecTracks = JSON.parse(localStorage.getItem("stored_recTracks")) || [];
+        // console.log('list of old artists', oldArtists);
+        oldRecTracks.forEach(function (track) {
+          addTrackRec(track);
+          // console.log("added artists");
+        });
       }
-      else {
-          // we have an access token so present tracks section and artists section
-          document.getElementById("tracksSection").style.display = 'block';  
-          document.getElementById("artistsSection").style.display = 'block';  
-          document.getElementById("profileSection").style.display = 'block';  
-          refreshTopTracks();
-          refreshTopArtists();
-          getProfile();
-      }
+    }
   }
 }
 
-function getCode(){
+
+
+function getCode() {
   let code = null;
   const queryString = window.location.search;
-  if(queryString.length >0){
+  if (queryString.length > 0) {
     const urlParams = new URLSearchParams(queryString);
     code = urlParams.get('code');
   }
   return code;
 }
 
-function handleRedirect(){
+function handleRedirect() {
   let code = getCode();
   fetchAccessToken(code);
   window.history.pushState("", "", redirect_uri);
@@ -57,7 +99,7 @@ function handleRedirect(){
 
 
 
-function requestAuth(){
+function requestAuth() {
   let url = AUTHORIZE;
   url += '?client_id=' + client_id;
   url += '&response_type=code';
@@ -68,16 +110,17 @@ function requestAuth(){
 }
 
 
-function fetchAccessToken(code){
+function fetchAccessToken(code) {
   let body = 'grant_type=authorization_code';
   body += '&code=' + code;
   body += '&redirect_uri=' + encodeURI(redirect_uri);
   body += '&client_id=' + client_id;
   body += '&client_secret=' + client_secret;
+  // console.log(client_secret);
   callAuthApi(body);
 }
 
-function refreshAccessToken(){
+function refreshAccessToken() {
   refresh_token = localStorage.getItem("refresh_token");
   let body = "grant_type=refresh_token";
   body += "&refresh_token=" + refresh_token;
@@ -85,7 +128,7 @@ function refreshAccessToken(){
   callAuthApi(body);
 }
 
-function callAuthApi(body){
+function callAuthApi(body) {
   let xhr = new XMLHttpRequest();
   xhr.open("POST", TOKEN, true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -94,84 +137,84 @@ function callAuthApi(body){
   xhr.onload = handleAuthResponse;
 }
 
-function handleAuthResponse(){
-  if ( this.status == 200 ){
-      var data = JSON.parse(this.responseText);
-      console.log(data);
-      var data = JSON.parse(this.responseText);
-      if ( data.access_token != undefined ){
-          access_token = data.access_token;
-          localStorage.setItem("access_token", access_token);
-      }
-      if ( data.refresh_token  != undefined ){
-          refresh_token = data.refresh_token;
-          localStorage.setItem("refresh_token", refresh_token);
-      }
-      onPageLoad();
+function handleAuthResponse() {
+  if (this.status == 200) {
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    var data = JSON.parse(this.responseText);
+    if (data.access_token != undefined) {
+      access_token = data.access_token;
+      localStorage.setItem("access_token", access_token);
+    }
+    if (data.refresh_token != undefined) {
+      refresh_token = data.refresh_token;
+      localStorage.setItem("refresh_token", refresh_token);
+    }
+    onPageLoad();
   }
   else {
-      console.log(this.responseText);
-      alert(this.responseText);
+    console.log(this.responseText);
+    alert(this.responseText);
   }
 }
 
-function getRecTracks(recUrl){
-  callApi( "GET", recUrl, null, handleRecTrackResponse );
+function getRecTracks(recUrl) {
+  callApi("GET", recUrl, null, handleRecTrackResponse);
 }
 
-function getTrack(artistId){
-  callApi( "GET", artistId, null, handleGetArtistInfoResponse);
+function getTrack(artistId) {
+  callApi("GET", artistId, null, handleGetArtistInfoResponse);
 }
 
-function searchTrack(name){
-  callApi( "GET", name, null, handleSearchTrackResponse );
+function searchTrack(name) {
+  callApi("GET", name, null, handleSearchTrackResponse);
 }
 
-function refreshTopArtists(range){
-  callApi( "GET", range, null, handleArtistsResponse );
+function refreshTopArtists(range) {
+  callApi("GET", range, null, handleArtistsResponse);
 }
 
-function refreshTopTracks(range){
-  callApi( "GET", range, null, handleTracksResponse );
+function refreshTopTracks(range) {
+  callApi("GET", range, null, handleTracksResponse);
 }
 
-function getProfile(){
-  callApi( "GET", PROFILE, null, handleProfileResponse );
+function getProfile() {
+  callApi("GET", PROFILE, null, handleProfileResponse);
 }
 
-function handleProfileResponse(){
-  if ( this.status == 200 ){
+function handleProfileResponse() {
+  if (this.status == 200) {
     var data = JSON.parse(this.responseText);
     console.log(data);
     // removeAllItems("profile");
     // data.item.forEach(item => addProfileInfo(item));
     addProfileInfo(data);
 
-  }else if(this.status == 401){
+  } else if (this.status == 401) {
     refreshAccessToken();
-  }else{
+  } else {
     console.log(this.responseText);
     alert(this.responseText)
   }
 }
 
-function handleRecTrackResponse(){
-  if ( this.status == 200 ){
+function handleRecTrackResponse() {
+  if (this.status == 200) {
     var data = JSON.parse(this.responseText);
     console.log(data);
     removeAllItems("recTracks");
     data.tracks.forEach(item => addTrackRec(item));
 
-  }else if(this.status == 401){
+  } else if (this.status == 401) {
     refreshAccessToken();
-  }else{
+  } else {
     console.log(this.responseText);
     alert(this.responseText)
   }
 }
 
-function handleGetArtistInfoResponse(){
-  if ( this.status == 200 ){
+function handleGetArtistInfoResponse() {
+  if (this.status == 200) {
     var data = JSON.parse(this.responseText);
     console.log(data);
     let seed_artists = data.id;
@@ -182,16 +225,16 @@ function handleGetArtistInfoResponse(){
     // console.log(seedSong);
     requestTrackRec(seed_artists, seed_genres, seedSong);
 
-  }else if(this.status == 401){
+  } else if (this.status == 401) {
     refreshAccessToken();
-  }else{
+  } else {
     console.log(this.responseText);
     alert(this.responseText)
   }
 }
 
-function handleSearchTrackResponse(){// send artist id to get genres 
-  if ( this.status == 200 ){
+function handleSearchTrackResponse() {// send artist id to get genres
+  if (this.status == 200) {
     var data = JSON.parse(this.responseText);
     console.log(data);
     removeAllItems("recTracks");
@@ -201,49 +244,49 @@ function handleSearchTrackResponse(){// send artist id to get genres
     // console.log('artist_id: ', artist_id);
     getArtistInfo(artist_id)
 
-  }else if(this.status == 401){
+  } else if (this.status == 401) {
     refreshAccessToken();
-  }else{
+  } else {
     console.log(this.responseText);
     alert(this.responseText)
   }
 }
 
-function handleArtistsResponse(){
-  if ( this.status == 200 ){
-      var data = JSON.parse(this.responseText);
-      console.log(data);
-      removeAllItems( "topArtists" );
-      data.items.forEach(item => addArtists(item));
+function handleArtistsResponse() {
+  if (this.status == 200) {
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    removeAllItems("topArtists");
+    data.items.forEach(item => addArtists(item));
   }
-  else if ( this.status == 401 ){
-      refreshAccessToken()
+  else if (this.status == 401) {
+    refreshAccessToken()
   }
   else {
-      console.log(this.responseText);
-      alert(this.responseText);
+    console.log(this.responseText);
+    alert(this.responseText);
   }
 }
 
-function handleTracksResponse(){
-  if ( this.status == 200 ){
-      var data = JSON.parse(this.responseText);
-      console.log(data);
-      removeAllItems( "topTracks" );
-      data.items.forEach(item => addTracks(item));
-     
+function handleTracksResponse() {
+  if (this.status == 200) {
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+    removeAllItems("topTracks");
+    data.items.forEach(item => addTracks(item));
+
 
   }
-  else if ( this.status == 401 ){
-      refreshAccessToken()
+  else if (this.status == 401) {
+    refreshAccessToken()
   }
   else {
-      console.log(this.responseText);
-      alert(this.responseText);
+    console.log(this.responseText);
+    alert(this.responseText);
   }
 }
 
-function addTrackRec(item){
+function addTrackRec(item) {
   let rowNode = document.createElement("tr");
   let nameNode = document.createElement("td");
   let imageNode = document.createElement("img");
@@ -258,9 +301,21 @@ function addTrackRec(item){
 
   document.getElementById("recTrack").style.display = "block";
   document.getElementById("recTrack").appendChild(rowNode);
+
+
+  let storedRecTracks = JSON.parse(localStorage.getItem("stored_recTracks")) || [];
+  storedRecTracks.push(item);
+  if (storedRecTracks.length > 20) {
+    storedRecTracks.shift();
+  }
+
+  let firstArtistImage = storedRecTracks[0].album.images[0].url;
+  document.body.style.backgroundImage = `url(${firstArtistImage})`;
+
+  localStorage.setItem("stored_recTracks", JSON.stringify(storedRecTracks));
 }
 
-function addArtists(item){
+function addArtists(item) {
   let rowNode = document.createElement("tr");
   let nameNode = document.createElement("td");
   let imageNode = document.createElement("img");
@@ -274,10 +329,22 @@ function addArtists(item){
   rowNode.appendChild(nameNode);
 
   document.getElementById("topArtists").style.display = "block";
-  document.getElementById("topArtists").appendChild(rowNode); 
+  document.getElementById("topArtists").appendChild(rowNode);
+
+
+  let storedArtists = JSON.parse(localStorage.getItem("stored_artists")) || [];
+
+  storedArtists.push(item);
+  if (storedArtists.length > 20) {
+    storedArtists.shift();
+  }
+  let firstArtistImage = storedArtists[0].images[0].url;
+  document.body.style.backgroundImage = `url(${firstArtistImage})`;
+
+  localStorage.setItem("stored_artists", JSON.stringify(storedArtists));
 }
 
-function addTracks(item){
+function addTracks(item) {
   let rowNode = document.createElement("tr");
   let nameNode = document.createElement("td");
   let imageNode = document.createElement("img");
@@ -291,10 +358,21 @@ function addTracks(item){
   rowNode.appendChild(nameNode);
 
   document.getElementById("topTracks").style.display = "block";
-  document.getElementById("topTracks").appendChild(rowNode); 
+  document.getElementById("topTracks").appendChild(rowNode);
+
+  let storedTracks = JSON.parse(localStorage.getItem("stored_tracks")) || [];
+
+  storedTracks.push(item);
+  if (storedTracks.length > 20) {
+    storedTracks.shift();
+  }
+  let firstImage = storedTracks[0].album.images[0].url;
+  document.body.style.backgroundImage = `url(${firstImage})`;
+  localStorage.setItem("stored_tracks", JSON.stringify(storedTracks));
+
 }
 
-function addProfileInfo(item){
+function addProfileInfo(item) {
   let followersCount = document.createElement("div");
   let accountType = document.createElement("div");
   let country = document.createElement("div");
@@ -327,7 +405,7 @@ function addProfileInfo(item){
 
 }
 
-function callApi(method, url, body, callback){
+function callApi(method, url, body, callback) {
   let xhr = new XMLHttpRequest();
   xhr.open(method, url, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
@@ -336,57 +414,64 @@ function callApi(method, url, body, callback){
   xhr.onload = callback;
 }
 
-// function removeAllItems( elementId ){
-//   let node = document.getElementById(elementId);
-//   while (node.firstChild) {
-//       node.removeChild(node.firstChild);
-//   }
-// }
+function removeAllItems(elementId) {
+  let node = document.getElementById(elementId);
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
+}
 
 function updateTracks() {
   var slider = document.getElementById("myRange");
   let value = slider.value;
   // console.log(slider.value);
-  if(value == 50){
+  if (value == 50) {
     refreshTopTracks(TRACKS);
-  }else if(value == 1){
+  } else if (value == 1) {
     refreshTopTracks(TRACKS_SHORT_TERM);
-  }else{
+  } else {
     refreshTopTracks(TRACKS_LONG_TERM);
   }
+  localStorage.setItem(window.location.pathname + "_slider_value", value)
 }
 
 function updateArtists() {
   var slider = document.getElementById("myRange");
   let value = slider.value;
   // console.log(slider.value);
-  if(value == 50){
+  if (value == 50) {
     refreshTopArtists(ARTISTS);
-  }else if(value == 1){
+  } else if (value == 1) {
     refreshTopArtists(ARTISTS_SHORT_TERM);
-  }else{
+  } else {
     refreshTopArtists(ARTISTS_LONG_TERM);
   }
+  localStorage.setItem(window.location.pathname + "_slider_value", value)
+
 }
 
-function handleTracksRefresh(){
+function handleTracksRefresh() {
   refreshTopTracks(TRACKS);
 }
-function handleArtistsRefresh(){
+function handleArtistsRefresh() {
   refreshTopArtists(ARTISTS);
 }
 
 
-function fetchTrack(){
+function fetchTrack() {
+  //     window.location.reload();
+
   var value = document.getElementById("searchKey").value;
   let url = SEARCH_TRACK;
   url += 'q=track%3A' + value;
   url += '&type=track&limit=20';
-  
   searchTrack(url);
+  document.getElementById("btn1").addEventListener("click", function () {
+    window.location.reload();
+  });
 }
 
-function getArtistInfo(artistId){
+function getArtistInfo(artistId) {
   let url = ARTIST_INFO;
   url += artistId;
   // console.log("artist url: ", url);
@@ -395,7 +480,7 @@ function getArtistInfo(artistId){
   getTrack(url);
 }
 
-function requestTrackRec(seed_artists, seed_genres, seed_tracks){
+function requestTrackRec(seed_artists, seed_genres, seed_tracks) {
   let url = TRACK_REC;
   url += 'limit=20';
   url += '&seed_artists=' + seed_artists;
@@ -405,3 +490,11 @@ function requestTrackRec(seed_artists, seed_genres, seed_tracks){
 
   getRecTracks(url);
 }
+
+// function refreshRecTracks() {
+//   fetchTrack();
+//   document.getElementById("refreshButton").addEventListener("click", function () {
+//     window.location.reload();
+//   });
+//   console.log('refresh clicked');
+// }
